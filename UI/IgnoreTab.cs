@@ -249,7 +249,7 @@ namespace FCCH.UI
 
         private void RequestHeaderMode()
         {
-            if (_visible.Count > BulkHeader.ConfirmThreshold)
+            if (_visible.Count > _configuration.ConfirmThreshold)
                 _showHeaderModeConfirm = true;
             else
                 ApplyHeaderMode();

@@ -95,6 +95,18 @@ namespace FCCH.UI
                         new Toggle("Skip Withdraw Confirm", "", "skipWith",
                             () => _configuration.DisableAskWithdrawAll, v => _configuration.DisableAskWithdrawAll = v),
                     });
+
+                    DrawSettingRow("Confirm Threshold", () =>
+                    {
+                        int confirmThreshold = System.Math.Clamp(_configuration.ConfirmThreshold, 1, 10000);
+                        ImGui.SetNextItemWidth(360);
+                        if (ImGui.SliderInt("##confirmThreshold", ref confirmThreshold, 1, 10000, "%d items"))
+                        {
+                            _configuration.ConfirmThreshold = confirmThreshold;
+                            _configuration.Save();
+                        }
+                        if (ImGui.IsItemHovered()) ImGui.SetTooltip("Show a confirmation before bulk actions affecting more than this many items.");
+                    });
                 }
                 ImGui.Spacing();
 
@@ -236,6 +248,7 @@ namespace FCCH.UI
                     _configuration.DisableAskWithdrawAll = false;
                     _configuration.LowerQualityOnDeposit = false;
                     _configuration.LeaveOneItemPerStack = false;
+                    _configuration.ConfirmThreshold = 9999;
                     _configuration.ToolbarLocked = true;
                     _configuration.ToolbarPosX = -1f;
                     _configuration.ToolbarPosY = -1f;

@@ -231,7 +231,7 @@ namespace FCCH.UI
 
         private void RequestHeaderMode()
         {
-            if (_visible.Count > BulkHeader.ConfirmThreshold)
+            if (_visible.Count > _configuration.ConfirmThreshold)
                 _showHeaderModeConfirm = true;
             else
                 ApplyHeaderMode();
@@ -239,7 +239,7 @@ namespace FCCH.UI
 
         private void RequestHeaderMax()
         {
-            if (_visible.Count > BulkHeader.ConfirmThreshold)
+            if (_visible.Count > _configuration.ConfirmThreshold)
                 _showHeaderMaxConfirm = true;
             else
                 ApplyHeaderMax();
@@ -417,7 +417,7 @@ namespace FCCH.UI
             var clicked = _clickedCategory.Value;
             _clickedCategory = null;
 
-            if (clicked.Count > BulkHeader.ConfirmThreshold)
+            if (clicked.Count > _configuration.ConfirmThreshold)
             {
                 _pendingCategory = clicked;
                 _showCategoryConfirm = true;
