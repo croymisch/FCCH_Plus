@@ -14,9 +14,6 @@ namespace FCCH.Common
 {
     public static class ExportHelper
     {
-        public const string IgnoreListPrefix = "FCCH_IGN_";
-        public const string SinglesListPrefix = "FCCH_SNG_";
-        public const string WorkshopListPrefix = "FCCH_WKS_";
         public const string TeamcraftUrlPrefix = "https://ffxivteamcraft.com/";
 
         private static readonly Regex TeamcraftLine = new(@"^(\d+)x\s+(.+)$", RegexOptions.Compiled);
@@ -41,14 +38,12 @@ namespace FCCH.Common
             EmptyArtisanList
         }
 
-        public static bool Export<T>(string header, T data)
+        public static bool Export<T>(T data)
         {
             try
             {
-                string json = JsonConvert.SerializeObject(data, Formatting.None);
-                string encoded = Encode(json);
-                string result = header + encoded;
-                ImGui.SetClipboardText(result);
+                string json = JsonConvert.SerializeObject(data, Formatting.Indented);
+                ImGui.SetClipboardText(json);
                 return true;
             }
             catch (Exception ex)
@@ -58,26 +53,12 @@ namespace FCCH.Common
             }
         }
 
-        public static (ImportResult Result, T? Data) Import<T>(string expectedHeader)
+        public static (ImportResult Result, T? Data) Import<T>()
         {
             try
             {
                 string clipboard = ImGui.GetClipboardText();
-
-                if (string.IsNullOrWhiteSpace(clipboard))
-                    return (ImportResult.EmptyClipboard, default);
-
-                if (!clipboard.StartsWith(expectedHeader))
-                {
-                    if (clipboard.StartsWith("FCCH_"))
-                        return (ImportResult.WrongTabType, default);
-                    return (ImportResult.InvalidFormat, default);
-                }
-
-                string encoded = clipboard.Substring(expectedHeader.Length);
-                string json = Decode(encoded);
-
-                T? data = JsonConvert.DeserializeObject<T>(json);
+                T? data = JsonConvert.DeserializeObject<T>(clipboard);
                 if (data == null)
                     return (ImportResult.ParseError, default);
 
@@ -100,13 +81,9 @@ namespace FCCH.Common
 
                 clipboard = clipboard.Trim();
 
-                if (clipboard.StartsWith(SinglesListPrefix))
-                {
-                    var list = JsonConvert.DeserializeObject<List<WithdrawItem>>(Decode(clipboard.Substring(SinglesListPrefix.Length)));
-                    return list == null
-                        ? (ImportResult.ParseError, null, 0, new List<string>())
-                        : (ImportResult.Success, list, 0, new List<string>());
-                }
+                var list = JsonConvert.DeserializeObject<List<WithdrawItem>>(clipboard);
+                if (list != null)
+                    return (ImportResult.Success, list, 0, new List<string>());
 
                 if (clipboard.StartsWith("FCCH_"))
                     return (ImportResult.WrongTabType, null, 0, new List<string>());

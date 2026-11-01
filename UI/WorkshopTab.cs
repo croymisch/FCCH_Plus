@@ -555,7 +555,7 @@ namespace FCCH.UI
                     Quantity = x.Quantity
                 }).ToList();
 
-                if (Common.ExportHelper.Export(Common.ExportHelper.WorkshopListPrefix, exportData))
+                if (Common.ExportHelper.Export(exportData))
                 {
                     Chat.Result($"Copied {exportData.Count} workshop projects to clipboard.");
                 }
@@ -572,7 +572,7 @@ namespace FCCH.UI
             ImGui.PushStyleColor(ImGuiCol.ButtonHovered, ImGui.GetStyle().Colors[(int)ImGuiCol.TabHovered]);
             if (ImGui.Button("Import"))
             {
-                var (result, data) = Common.ExportHelper.Import<List<PresetShoppingItem>>(Common.ExportHelper.WorkshopListPrefix);
+                var (result, data) = Common.ExportHelper.Import<List<PresetShoppingItem>>();
                 if (result == Common.ExportHelper.ImportResult.Success && data != null)
                 {
                     _helper.ShoppingList.Clear();

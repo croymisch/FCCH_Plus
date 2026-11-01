@@ -37,7 +37,8 @@ namespace FCCH
         public bool LeaveOneItemPerStack { get; set; } = true;
         public bool DisableAskDepositAll { get; set; } = false;
         public bool DisableAskWithdrawAll { get; set; } = false;
-        public int ConfirmThreshold { get; set; } = 50;
+        public bool DisableAskBulkAction { get; set; } = false;
+        public int BulkConfirmThreshold { get; set; } = 50;
         
         public List<WithdrawItem> WithdrawItems { get; set; } = new();
         public List<Models.ShoppingItem> ShoppingItems { get; set; } = new();

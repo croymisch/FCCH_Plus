@@ -231,7 +231,7 @@ namespace FCCH.UI
 
         private void RequestHeaderMode()
         {
-            if (_visible.Count > _configuration.ConfirmThreshold)
+            if (!_configuration.DisableAskBulkAction && _visible.Count > _configuration.BulkConfirmThreshold)
                 _showHeaderModeConfirm = true;
             else
                 ApplyHeaderMode();
@@ -239,7 +239,7 @@ namespace FCCH.UI
 
         private void RequestHeaderMax()
         {
-            if (_visible.Count > _configuration.ConfirmThreshold)
+            if (!_configuration.DisableAskBulkAction && _visible.Count > _configuration.BulkConfirmThreshold)
                 _showHeaderMaxConfirm = true;
             else
                 ApplyHeaderMax();
@@ -417,7 +417,7 @@ namespace FCCH.UI
             var clicked = _clickedCategory.Value;
             _clickedCategory = null;
 
-            if (clicked.Count > _configuration.ConfirmThreshold)
+            if (!_configuration.DisableAskBulkAction && clicked.Count > _configuration.BulkConfirmThreshold)
             {
                 _pendingCategory = clicked;
                 _showCategoryConfirm = true;
@@ -823,7 +823,7 @@ namespace FCCH.UI
             ImGui.PushStyleColor(ImGuiCol.ButtonHovered, ImGui.GetStyle().Colors[(int)ImGuiCol.TabHovered]);
             if (ImGui.Button("Export"))
             {
-                if (Common.ExportHelper.Export(Common.ExportHelper.SinglesListPrefix, _configuration.WithdrawItems))
+                if (Common.ExportHelper.Export(_configuration.WithdrawItems))
                 {
                     Chat.Result("Copied Custom list to clipboard.");
                 }

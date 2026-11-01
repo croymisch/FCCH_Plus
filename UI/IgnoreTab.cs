@@ -249,7 +249,7 @@ namespace FCCH.UI
 
         private void RequestHeaderMode()
         {
-            if (_visible.Count > _configuration.ConfirmThreshold)
+            if (!_configuration.DisableAskBulkAction && _visible.Count > _configuration.BulkConfirmThreshold)
                 _showHeaderModeConfirm = true;
             else
                 ApplyHeaderMode();
@@ -608,7 +608,7 @@ namespace FCCH.UI
             ImGui.PushStyleColor(ImGuiCol.ButtonHovered, ImGui.GetStyle().Colors[(int)ImGuiCol.TabHovered]);
             if (ImGui.Button("Export"))
             {
-                if (Common.ExportHelper.Export(Common.ExportHelper.IgnoreListPrefix, _helper.Configuration.IgnoreList))
+                if (Common.ExportHelper.Export(_helper.Configuration.IgnoreList))
                 {
                     Chat.Result("Copied Ignore list to clipboard.");
                 }
@@ -625,7 +625,7 @@ namespace FCCH.UI
             ImGui.PushStyleColor(ImGuiCol.ButtonHovered, ImGui.GetStyle().Colors[(int)ImGuiCol.TabHovered]);
             if (ImGui.Button("Import"))
             {
-                var (result, data) = Common.ExportHelper.Import<List<Configuration.IgnoredItem>>(Common.ExportHelper.IgnoreListPrefix);
+                var (result, data) = Common.ExportHelper.Import<List<Configuration.IgnoredItem>>();
                 if (result == Common.ExportHelper.ImportResult.Success && data != null)
                 {
                     var skipped = data.RemoveAll(x => Common.ItemListEligibility.IsIneligible(x.ItemId));
